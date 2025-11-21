@@ -56,56 +56,60 @@ struct GameBoardView: View {
     
     // MARK: - Start View
     var startView: some View {
-        VStack(spacing: 30) {
-            Spacer()
-            
-            // Title removed for App Store compliance
-            
-            // High Score
-            VStack(spacing: 8) {
-                Text("High Score")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.white.opacity(0.7))
+        ScrollView {
+            VStack(spacing: 30) {
+                // Top padding
+                Color.clear.frame(height: 60)
                 
-                Text("\(viewModel.player.highScore)")
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(Color(hex: "F9FF14"))
-            }
-            .padding(.vertical, 20)
-            
-            Spacer()
-            
-            // Play Button
-            Button(action: {
-                showingDifficultySelect = true
-            }) {
-                HStack(spacing: 12) {
-                    Image(systemName: "play.fill")
-                        .font(.system(size: 24, weight: .bold))
-                    Text("Start Game")
-                        .font(.system(size: 20, weight: .bold))
+                // Title removed for App Store compliance
+                
+                // High Score
+                VStack(spacing: 8) {
+                    Text("High Score")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.white.opacity(0.7))
+                    
+                    Text("\(viewModel.player.highScore)")
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(Color(hex: "F9FF14"))
                 }
-                .foregroundColor(Color(hex: "050505"))
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(hex: "F9FF14"))
-                        .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
-                )
+                .padding(.vertical, 20)
+                
+                // Extra spacing
+                Color.clear.frame(height: 40)
+                
+                // Play Button
+                Button(action: {
+                    showingDifficultySelect = true
+                }) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 24, weight: .bold))
+                        Text("Start Game")
+                            .font(.system(size: 20, weight: .bold))
+                    }
+                    .foregroundColor(Color(hex: "050505"))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 60)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(hex: "F9FF14"))
+                            .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
+                    )
+                }
+                .padding(.horizontal, 32)
+                
+                // Back Button
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Back to Menu")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
+                        .frame(height: 44)
+                }
+                .padding(.bottom, 40)
             }
-            .padding(.horizontal, 32)
-            
-            // Back Button
-            Button(action: {
-                dismiss()
-            }) {
-                Text("Back to Menu")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
-                    .frame(height: 44)
-            }
-            .padding(.bottom, 40)
         }
     }
     
@@ -237,22 +241,145 @@ struct GameBoardView: View {
             Color.black.opacity(0.8)
                 .ignoresSafeArea()
             
+            ScrollView {
+                VStack(spacing: 30) {
+                    // Top padding
+                    Color.clear.frame(height: 100)
+                    
+                    Text("PAUSED")
+                        .font(.system(size: 36, weight: .black))
+                        .foregroundColor(Color(hex: "F9FF14"))
+                    
+                    VStack(spacing: 16) {
+                        // Resume Button
+                        Button(action: {
+                            showingPauseMenu = false
+                            isPaused = false
+                            viewModel.resumeGame()
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Resume")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(Color(hex: "050505"))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "F9FF14"))
+                            )
+                        }
+                        
+                        // Restart Button
+                        Button(action: {
+                            showingPauseMenu = false
+                            isPaused = false
+                            viewModel.startGame(screenSize: screenSize)
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Restart")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.white.opacity(0.1))
+                            )
+                        }
+                        
+                        // Quit Button
+                        Button(action: {
+                            viewModel.endGame()
+                            showingPauseMenu = false
+                            isPaused = false
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Quit")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.red.opacity(0.1))
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 100)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Game Over View
+    var gameOverView: some View {
+        ScrollView {
             VStack(spacing: 30) {
-                Text("PAUSED")
-                    .font(.system(size: 36, weight: .black))
-                    .foregroundColor(Color(hex: "F9FF14"))
+                // Top padding
+                Color.clear.frame(height: 40)
                 
+                // Game Over Title
+                VStack(spacing: 8) {
+                    Text("GAME OVER")
+                        .font(.system(size: 36, weight: .black))
+                        .foregroundColor(Color(hex: "F9FF14"))
+                    
+                    if viewModel.currentScore > viewModel.player.highScore - viewModel.currentScore {
+                        Text("New High Score!")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(Color(hex: "F9FF14").opacity(0.8))
+                    }
+                }
+                
+                // Stats
+                VStack(spacing: 20) {
+                    HStack(spacing: 12) {
+                        Image(systemName: viewModel.selectedDifficulty.icon)
+                            .font(.system(size: 16, weight: .bold))
+                        Text(viewModel.selectedDifficulty.rawValue)
+                            .font(.system(size: 16, weight: .bold))
+                    }
+                    .foregroundColor(Color(hex: viewModel.selectedDifficulty.color))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(
+                        Capsule()
+                            .fill(Color(hex: viewModel.selectedDifficulty.color).opacity(0.2))
+                    )
+                    
+                    StatRow(title: "Score", value: "\(viewModel.currentScore)")
+                    StatRow(title: "Jumps", value: "\(viewModel.jumpCount)")
+                    StatRow(title: "High Score", value: "\(viewModel.player.highScore)")
+                }
+                .padding(.vertical, 30)
+                
+                // Chart
+                if #available(iOS 16.0, *) {
+                    chartView
+                        .frame(height: 200)
+                        .padding(.horizontal, 32)
+                }
+                
+                // Buttons
                 VStack(spacing: 16) {
-                    // Resume Button
                     Button(action: {
-                        showingPauseMenu = false
-                        isPaused = false
-                        viewModel.resumeGame()
+                        showingGameOver = false
+                        viewModel.startGame(screenSize: screenSize)
                     }) {
                         HStack(spacing: 12) {
-                            Image(systemName: "play.fill")
+                            Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 20, weight: .bold))
-                            Text("Resume")
+                            Text("Play Again")
                                 .font(.system(size: 18, weight: .bold))
                         }
                         .foregroundColor(Color(hex: "050505"))
@@ -261,139 +388,23 @@ struct GameBoardView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color(hex: "F9FF14"))
+                                .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
                         )
                     }
                     
-                    // Restart Button
                     Button(action: {
-                        showingPauseMenu = false
-                        isPaused = false
-                        viewModel.startGame(screenSize: screenSize)
+                        showingGameOver = false
+                        dismiss()
                     }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "arrow.counterclockwise")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("Restart")
-                                .font(.system(size: 18, weight: .bold))
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.white.opacity(0.1))
-                        )
-                    }
-                    
-                    // Quit Button
-                    Button(action: {
-                        viewModel.endGame()
-                        showingPauseMenu = false
-                        isPaused = false
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("Quit")
-                                .font(.system(size: 18, weight: .bold))
-                        }
-                        .foregroundColor(.red)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.red.opacity(0.1))
-                        )
+                        Text("Back to Menu")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
+                            .frame(height: 44)
                     }
                 }
-                .padding(.horizontal, 40)
+                .padding(.horizontal, 32)
+                .padding(.bottom, 40)
             }
-        }
-    }
-    
-    // MARK: - Game Over View
-    var gameOverView: some View {
-        VStack(spacing: 30) {
-            Spacer()
-            
-            // Game Over Title
-            VStack(spacing: 8) {
-                Text("GAME OVER")
-                    .font(.system(size: 36, weight: .black))
-                    .foregroundColor(Color(hex: "F9FF14"))
-                
-                if viewModel.currentScore > viewModel.player.highScore - viewModel.currentScore {
-                    Text("New High Score!")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color(hex: "F9FF14").opacity(0.8))
-                }
-            }
-            
-            // Stats
-            VStack(spacing: 20) {
-                HStack(spacing: 12) {
-                    Image(systemName: viewModel.selectedDifficulty.icon)
-                        .font(.system(size: 16, weight: .bold))
-                    Text(viewModel.selectedDifficulty.rawValue)
-                        .font(.system(size: 16, weight: .bold))
-                }
-                .foregroundColor(Color(hex: viewModel.selectedDifficulty.color))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(Color(hex: viewModel.selectedDifficulty.color).opacity(0.2))
-                )
-                
-                StatRow(title: "Score", value: "\(viewModel.currentScore)")
-                StatRow(title: "Jumps", value: "\(viewModel.jumpCount)")
-                StatRow(title: "High Score", value: "\(viewModel.player.highScore)")
-            }
-            .padding(.vertical, 30)
-            
-            // Chart
-            if #available(iOS 16.0, *) {
-                chartView
-                    .frame(height: 200)
-                    .padding(.horizontal, 32)
-            }
-            
-            Spacer()
-            
-            // Buttons
-            VStack(spacing: 16) {
-                Button(action: {
-                    showingGameOver = false
-                    viewModel.startGame(screenSize: screenSize)
-                }) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 20, weight: .bold))
-                        Text("Play Again")
-                            .font(.system(size: 18, weight: .bold))
-                    }
-                    .foregroundColor(Color(hex: "050505"))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hex: "F9FF14"))
-                            .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
-                    )
-                }
-                
-                Button(action: {
-                    showingGameOver = false
-                    dismiss()
-                }) {
-                    Text("Back to Menu")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
-                        .frame(height: 44)
-                }
-            }
-            .padding(.horizontal, 32)
-            .padding(.bottom, 40)
         }
     }
     
@@ -443,62 +454,68 @@ struct GameBoardView: View {
             Color.black.opacity(0.9)
                 .ignoresSafeArea()
             
-            VStack(spacing: 30) {
-                VStack(spacing: 8) {
-                    Text("SELECT DIFFICULTY")
-                        .font(.system(size: 28, weight: .black))
-                        .foregroundColor(Color(hex: "F9FF14"))
+            ScrollView {
+                VStack(spacing: 30) {
+                    // Top padding
+                    Color.clear.frame(height: 40)
                     
-                    Text("Choose your challenge level")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.white.opacity(0.7))
-                }
-                
-                VStack(spacing: 16) {
-                    ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
-                        DifficultyButton(
-                            difficulty: difficulty,
-                            isSelected: selectedDifficulty == difficulty,
-                            action: {
-                                selectedDifficulty = difficulty
-                            }
+                    VStack(spacing: 8) {
+                        Text("SELECT DIFFICULTY")
+                            .font(.system(size: 28, weight: .black))
+                            .foregroundColor(Color(hex: "F9FF14"))
+                        
+                        Text("Choose your challenge level")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    
+                    VStack(spacing: 16) {
+                        ForEach(GameDifficulty.allCases, id: \.self) { difficulty in
+                            DifficultyButton(
+                                difficulty: difficulty,
+                                isSelected: selectedDifficulty == difficulty,
+                                action: {
+                                    selectedDifficulty = difficulty
+                                }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 32)
+                    
+                    // Start Button
+                    Button(action: {
+                        showingDifficultySelect = false
+                        showingGameOver = false
+                        viewModel.selectedDifficulty = selectedDifficulty
+                        viewModel.startGame(screenSize: screenSize)
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 20, weight: .bold))
+                            Text("Start Game")
+                                .font(.system(size: 18, weight: .bold))
+                        }
+                        .foregroundColor(Color(hex: "050505"))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "F9FF14"))
                         )
                     }
-                }
-                .padding(.horizontal, 32)
-                
-                // Start Button
-                Button(action: {
-                    showingDifficultySelect = false
-                    showingGameOver = false
-                    viewModel.selectedDifficulty = selectedDifficulty
-                    viewModel.startGame(screenSize: screenSize)
-                }) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 20, weight: .bold))
-                        Text("Start Game")
-                            .font(.system(size: 18, weight: .bold))
+                    .padding(.horizontal, 32)
+                    .padding(.top, 10)
+                    
+                    // Cancel Button
+                    Button(action: {
+                        showingDifficultySelect = false
+                    }) {
+                        Text("Cancel")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
+                            .frame(height: 44)
                     }
-                    .foregroundColor(Color(hex: "050505"))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hex: "F9FF14"))
-                    )
-                }
-                .padding(.horizontal, 32)
-                .padding(.top, 10)
-                
-                // Cancel Button
-                Button(action: {
-                    showingDifficultySelect = false
-                }) {
-                    Text("Cancel")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
-                        .frame(height: 44)
+                    .padding(.bottom, 40)
                 }
             }
         }

@@ -49,81 +49,85 @@ struct NeonDodgeView: View {
     
     // MARK: - Start View
     var startView: some View {
-        VStack(spacing: 30) {
-            Spacer()
-            
-            // Title removed for App Store compliance
-            
-            // High Score
-            VStack(spacing: 8) {
-                Text("High Score")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.white.opacity(0.7))
+        ScrollView {
+            VStack(spacing: 30) {
+                // Top padding
+                Color.clear.frame(height: 40)
                 
-                Text("\(viewModel.player.highScore)")
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(Color(hex: "F9FF14"))
-            }
-            .padding(.vertical, 20)
-            
-            // Instructions
-            VStack(spacing: 12) {
-                HStack(spacing: 12) {
-                    Image(systemName: "arrow.left.arrow.right")
-                        .font(.system(size: 24, weight: .bold))
+                // Title removed for App Store compliance
+                
+                // High Score
+                VStack(spacing: 8) {
+                    Text("High Score")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.white.opacity(0.7))
+                    
+                    Text("\(viewModel.player.highScore)")
+                        .font(.system(size: 36, weight: .bold))
                         .foregroundColor(Color(hex: "F9FF14"))
-                    
-                    Text("Drag to move left & right")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.white.opacity(0.8))
                 }
+                .padding(.vertical, 20)
                 
-                HStack(spacing: 12) {
-                    Image(systemName: "square.fill")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.red.opacity(0.8))
+                // Instructions
+                VStack(spacing: 12) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "arrow.left.arrow.right")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(Color(hex: "F9FF14"))
+                        
+                        Text("Drag to move left & right")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white.opacity(0.8))
+                    }
                     
-                    Text("Avoid the falling obstacles")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.white.opacity(0.8))
+                    HStack(spacing: 12) {
+                        Image(systemName: "square.fill")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.red.opacity(0.8))
+                        
+                        Text("Avoid the falling obstacles")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white.opacity(0.8))
+                    }
                 }
-            }
-            .padding(.horizontal, 40)
-            
-            Spacer()
-            
-            // Play Button
-            Button(action: {
-                showingGameOver = false
-                viewModel.startGame(screenSize: screenSize)
-            }) {
-                HStack(spacing: 12) {
-                    Image(systemName: "play.fill")
-                        .font(.system(size: 24, weight: .bold))
-                    Text("Start Game")
-                        .font(.system(size: 20, weight: .bold))
+                .padding(.horizontal, 40)
+                
+                // Extra spacing
+                Color.clear.frame(height: 20)
+                
+                // Play Button
+                Button(action: {
+                    showingGameOver = false
+                    viewModel.startGame(screenSize: screenSize)
+                }) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 24, weight: .bold))
+                        Text("Start Game")
+                            .font(.system(size: 20, weight: .bold))
+                    }
+                    .foregroundColor(Color(hex: "050505"))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 60)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(hex: "F9FF14"))
+                            .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
+                    )
                 }
-                .foregroundColor(Color(hex: "050505"))
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(hex: "F9FF14"))
-                        .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
-                )
+                .padding(.horizontal, 32)
+                
+                // Back Button
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Back to Menu")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
+                        .frame(height: 44)
+                }
+                .padding(.bottom, 40)
             }
-            .padding(.horizontal, 32)
-            
-            // Back Button
-            Button(action: {
-                dismiss()
-            }) {
-                Text("Back to Menu")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
-                    .frame(height: 44)
-            }
-            .padding(.bottom, 40)
         }
     }
     
@@ -222,22 +226,121 @@ struct NeonDodgeView: View {
             Color.black.opacity(0.8)
                 .ignoresSafeArea()
             
+            ScrollView {
+                VStack(spacing: 30) {
+                    // Top padding
+                    Color.clear.frame(height: 100)
+                    
+                    Text("PAUSED")
+                        .font(.system(size: 36, weight: .black))
+                        .foregroundColor(Color(hex: "F9FF14"))
+                    
+                    VStack(spacing: 16) {
+                        // Resume Button
+                        Button(action: {
+                            showingPauseMenu = false
+                            isPaused = false
+                            viewModel.resumeGame()
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Resume")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(Color(hex: "050505"))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "F9FF14"))
+                            )
+                        }
+                        
+                        // Restart Button
+                        Button(action: {
+                            showingPauseMenu = false
+                            isPaused = false
+                            viewModel.startGame(screenSize: screenSize)
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Restart")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.white.opacity(0.1))
+                            )
+                        }
+                        
+                        // Quit Button
+                        Button(action: {
+                            viewModel.endGame()
+                            showingPauseMenu = false
+                            isPaused = false
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("Quit")
+                                    .font(.system(size: 18, weight: .bold))
+                            }
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.red.opacity(0.1))
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 100)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Game Over View
+    var gameOverView: some View {
+        ScrollView {
             VStack(spacing: 30) {
-                Text("PAUSED")
-                    .font(.system(size: 36, weight: .black))
-                    .foregroundColor(Color(hex: "F9FF14"))
+                // Top padding
+                Color.clear.frame(height: 40)
+                
+                VStack(spacing: 8) {
+                    Text("GAME OVER")
+                        .font(.system(size: 36, weight: .black))
+                        .foregroundColor(Color(hex: "F9FF14"))
+                    
+                    if viewModel.currentScore > viewModel.player.highScore - viewModel.currentScore {
+                        Text("New High Score!")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(Color(hex: "F9FF14").opacity(0.8))
+                    }
+                }
+                
+                VStack(spacing: 20) {
+                    StatRow(title: "Score", value: "\(viewModel.currentScore)")
+                    StatRow(title: "Survived", value: "\(Int(viewModel.survivalTime))s")
+                    StatRow(title: "High Score", value: "\(viewModel.player.highScore)")
+                }
+                .padding(.vertical, 30)
                 
                 VStack(spacing: 16) {
-                    // Resume Button
                     Button(action: {
-                        showingPauseMenu = false
-                        isPaused = false
-                        viewModel.resumeGame()
+                        showingGameOver = false
+                        viewModel.startGame(screenSize: screenSize)
                     }) {
                         HStack(spacing: 12) {
-                            Image(systemName: "play.fill")
+                            Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 20, weight: .bold))
-                            Text("Resume")
+                            Text("Play Again")
                                 .font(.system(size: 18, weight: .bold))
                         }
                         .foregroundColor(Color(hex: "050505"))
@@ -246,115 +349,23 @@ struct NeonDodgeView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color(hex: "F9FF14"))
+                                .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
                         )
                     }
                     
-                    // Restart Button
                     Button(action: {
-                        showingPauseMenu = false
-                        isPaused = false
-                        viewModel.startGame(screenSize: screenSize)
+                        showingGameOver = false
+                        dismiss()
                     }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "arrow.counterclockwise")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("Restart")
-                                .font(.system(size: 18, weight: .bold))
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.white.opacity(0.1))
-                        )
-                    }
-                    
-                    // Quit Button
-                    Button(action: {
-                        viewModel.endGame()
-                        showingPauseMenu = false
-                        isPaused = false
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("Quit")
-                                .font(.system(size: 18, weight: .bold))
-                        }
-                        .foregroundColor(.red)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.red.opacity(0.1))
-                        )
+                        Text("Back to Menu")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
+                            .frame(height: 44)
                     }
                 }
-                .padding(.horizontal, 40)
+                .padding(.horizontal, 32)
+                .padding(.bottom, 40)
             }
-        }
-    }
-    
-    // MARK: - Game Over View
-    var gameOverView: some View {
-        VStack(spacing: 30) {
-            Spacer()
-            
-            VStack(spacing: 8) {
-                Text("GAME OVER")
-                    .font(.system(size: 36, weight: .black))
-                    .foregroundColor(Color(hex: "F9FF14"))
-                
-                if viewModel.currentScore > viewModel.player.highScore - viewModel.currentScore {
-                    Text("New High Score!")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color(hex: "F9FF14").opacity(0.8))
-                }
-            }
-            
-            VStack(spacing: 20) {
-                StatRow(title: "Score", value: "\(viewModel.currentScore)")
-                StatRow(title: "Survived", value: "\(Int(viewModel.survivalTime))s")
-                StatRow(title: "High Score", value: "\(viewModel.player.highScore)")
-            }
-            .padding(.vertical, 30)
-            
-            Spacer()
-            
-            VStack(spacing: 16) {
-                Button(action: {
-                    showingGameOver = false
-                    viewModel.startGame(screenSize: screenSize)
-                }) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 20, weight: .bold))
-                        Text("Play Again")
-                            .font(.system(size: 18, weight: .bold))
-                    }
-                    .foregroundColor(Color(hex: "050505"))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(hex: "F9FF14"))
-                            .shadow(color: Color(hex: "F9FF14").opacity(0.5), radius: 15, x: 0, y: 5)
-                    )
-                }
-                
-                Button(action: {
-                    showingGameOver = false
-                    dismiss()
-                }) {
-                    Text("Back to Menu")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(hex: "F9FF14").opacity(0.7))
-                        .frame(height: 44)
-                }
-            }
-            .padding(.horizontal, 32)
-            .padding(.bottom, 40)
         }
     }
 }
